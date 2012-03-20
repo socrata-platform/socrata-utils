@@ -1,4 +1,5 @@
-package com.socrata.util.locks
+package com.socrata.util
+package locks
 package simple
 
 import scala.{collection => sc}

@@ -1,4 +1,5 @@
-package com.socrata.util.codec
+package com.socrata.util
+package codec
 
 import scala.{collection => sc}
 
