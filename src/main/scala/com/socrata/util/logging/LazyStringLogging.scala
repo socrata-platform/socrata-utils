@@ -12,6 +12,7 @@ import org.slf4j.{Logger, LoggerFactory}
   * to propagate outward. */
 class LazyStringLogger(val slf4j: Logger) {
   def this(cls: Class[_]) = this(LoggerFactory.getLogger(cls))
+  def this(name: String) = this(LoggerFactory.getLogger(name))
   
   def trace(message: => String): Unit =
     if(slf4j.isTraceEnabled) {
@@ -76,5 +77,6 @@ class LazyStringLogger(val slf4j: Logger) {
 object LazyStringLogger {
   def apply[T: ClassManifest]: LazyStringLogger = apply(classManifest[T].erasure)
   def apply(cls: Class[_]): LazyStringLogger = new LazyStringLogger(cls)
+  def apply(name: String): LazyStringLogger = new LazyStringLogger(name)
   def apply(logger: Logger): LazyStringLogger = new LazyStringLogger(logger)
 }
