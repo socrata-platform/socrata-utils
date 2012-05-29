@@ -49,8 +49,8 @@ class MurmurHash3Test extends FunSuite with PropertyChecks with MustMatchers {
       Gen.containerOf[List, String](validCodePoint) map (_.mkString)
     }
 
-    val hash = new MurmurHash3(1)
-    forAll { (text: String) =>
+    forAll { (seed: Int, text: String) =>
+      val hash = new MurmurHash3(seed)
       hash(text) must equal (hash(text.getBytes("UTF-16BE")))
     }
   }
