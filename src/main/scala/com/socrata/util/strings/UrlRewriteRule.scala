@@ -27,7 +27,7 @@ class UrlRewriteRule {
         var i: Int = 1
 
         while (i <= matcher.groupCount) {
-          rewritten = rewritten.replace("\\$" + Integer.toString(i), matcher.group(i))
+          rewritten = rewritten.replaceFirst("\\$" + Integer.toString(i), matcher.group(i))
           i += 1
         }
 
