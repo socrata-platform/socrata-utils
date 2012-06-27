@@ -13,6 +13,8 @@ class UrlRewriteRuleTest  extends FunSuite with Checkers {
     assert("/resources/catalog/rows/abcd-1234" == rules.rewrite("/id/catalog/abcd-1234"))
     assert("/resources/catalog/rows/abcd-1234.json" == rules.rewrite("/id/catalog/abcd-1234.json"))
     assert("/others" == rules.rewrite("/others"))
+    assert("/resources/catalog/rows.json$" == rules.rewrite("/id/catalog.json$"))
+    assert("/resources/catalog/rows.json?col=value" == rules.rewrite("/id/catalog.json?col=value"))
   }
 
   test("UrlRewrite semanticUrls") { semanticUrls }
