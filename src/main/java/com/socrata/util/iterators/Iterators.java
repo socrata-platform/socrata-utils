@@ -35,4 +35,8 @@ public class Iterators {
     public static <T> Iterator<List<T>> grouped(final Iterator<T> input, final int groupSize) {
         return new GroupedIterator<T>(input, groupSize);
     }
+
+    public static <T> Iterator<T> flattened(Iterator<Iterator<T>> input) {
+        return new FlatteningIterator<T>(input);
+    }
 }
