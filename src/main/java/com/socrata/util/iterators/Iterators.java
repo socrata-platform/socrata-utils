@@ -1,6 +1,7 @@
 package com.socrata.util.iterators;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class Iterators {
@@ -16,7 +17,7 @@ public class Iterators {
     public static <T> Iterator<T> singleton(final T obj) {
         return new Iterator<T>() {
             private boolean used = false;
-            
+
             public boolean hasNext() { return !used; }
 
             public T next() {
@@ -29,5 +30,9 @@ public class Iterators {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    public static <T> Iterator<List<T>> grouped(final Iterator<T> input, final int groupSize) {
+        return new GroupedIterator<T>(input, groupSize);
     }
 }
