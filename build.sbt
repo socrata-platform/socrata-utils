@@ -50,3 +50,8 @@ sourceGenerators in Compile <+= (sourceManaged in Compile, scalaVersion in Compi
   }
   Seq(targetFile)
 }
+
+// bllllleargh -- 2.8's doc process blows up thanks to SI-4284
+publishArtifact in (Compile, packageDoc) <<= scalaVersion { sv =>
+  !sv.startsWith("2.8.")
+}
