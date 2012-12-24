@@ -1,12 +1,13 @@
 import SocrataSbtKeys._
+import SocrataUtil._
 
 seq(socrataSettings(): _*)
 
 name := "socrata-utils"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.0"
 
-crossScalaVersions := Seq("2.8.1", "2.9.2")
+crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.0")
 
 libraryDependencies <++= (slf4jVersion) { slf4jVersion =>
   Seq(
@@ -18,8 +19,8 @@ libraryDependencies <++= (slf4jVersion) { slf4jVersion =>
 }
 
 libraryDependencies <+= (scalaVersion) {
-  case "2.8.1" => "org.scala-tools.testing" % "scalacheck_2.8.1" % "1.8" % "test"
-  case "2.9.2" => "org.scala-tools.testing" % "scalacheck_2.9.1" % "1.9" % "test"
+  case "2.8.1" => "org.scalacheck" % "scalacheck_2.8.1" % "1.8" % "test"
+  case _ => "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
 }
 
 testOptions in Test += Tests.Setup { loader =>
@@ -42,8 +43,9 @@ sourceGenerators in Compile <+= (sourceManaged in Compile, scalaVersion in Compi
     printer.println("object ErrorImpl {")
     printer.println("  @inline def error(message: String): Nothing = {")
     scalaVersion match {
-      case "2.8.1" => printer.println("    Predef.error(message)")
-      case "2.9.2" => printer.println("    sys.error(message)")
+      case Is28() => printer.println("    Predef.error(message)")
+      case Is29() => printer.println("    sys.error(message)")
+      case Is210() => printer.println("    sys.error(message)")
     }
     printer.println("  }")
     printer.println("}")
