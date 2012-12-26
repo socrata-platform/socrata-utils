@@ -39,4 +39,13 @@ public class Iterators {
     public static <T> Iterator<T> flattened(Iterator<Iterator<T>> input) {
         return new FlatteningIterator<T>(input);
     }
+
+    public static <T> Iterator<T> append(Iterator<T>... inputs) {
+        if(inputs.length == 0)
+            return empty();
+        else if(inputs.length == 1)
+            return inputs[0];
+        else
+            return new AppendedIterator<T>(inputs);
+    }
 }
