@@ -1,31 +1,44 @@
-import SocrataSbtKeys._
-import SocrataUtil._
-
-seq(socrataSettings(): _*)
-
 name := "socrata-utils"
+
+organization := "com.socrata"
+
+version := "0.6.1-SNAPSHOT"
 
 scalaVersion := "2.10.0"
 
 crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.0")
 
-libraryDependencies <++= (slf4jVersion) { slf4jVersion =>
-  Seq(
-    "joda-time" % "joda-time" % "1.6",
-    "com.yammer.metrics" % "metrics-core" % "2.0.3",
-    "com.rojoma" %% "simple-arm" % "1.1.10",
-    "org.slf4j" % "slf4j-simple" % slf4jVersion % "test"
-  )
-}
+libraryDependencies ++= Seq(
+  "joda-time" % "joda-time" % "1.6",
+  "com.yammer.metrics" % "metrics-core" % "2.0.3",
+  "com.rojoma" %% "simple-arm" % "1.1.10",
+  "org.slf4j" % "slf4j-simple" % "1.7.5" % "test"
+)
 
-libraryDependencies <+= (scalaVersion) {
-  case "2.8.1" => "org.scalacheck" % "scalacheck_2.8.1" % "1.8" % "test"
-  case _ => "org.scalacheck" %% "scalacheck" % "1.10.0" % "test"
+libraryDependencies <++= (scalaVersion) {
+  case "2.8.1" =>
+    Seq("org.scalacheck" % "scalacheck_2.8.1" % "1.8" % "test",
+        "org.scalatest" % "scalatest_2.8.1" % "1.8" % "test")
+  case _ =>
+    Seq("org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
+        "org.scalatest" %% "scalatest" % "1.9.1" % "test")
 }
 
 testOptions in Test += Tests.Setup { loader =>
   loader.loadClass("org.slf4j.LoggerFactory").getMethod("getILoggerFactory").invoke(null)
 }
+
+scalacOptions <++= (scalaVersion) map {
+  case s if s.startsWith("2.8.") => Seq("-deprecation")
+  case s if s.startsWith("2.9.") => Seq("-deprecation")
+  case s if s.startsWith("2.10.") =>
+    Seq("-deprecation", "-feature",
+      // I would prefer to turn these on per-scope as appropriate
+      // but can't do it while keeping 2.[8,9] compatibility.
+      "-language:higherKinds", "-language:implicitConversions")
+}
+
+javacOptions ++= Seq("-Xlint:unchecked")
 
 sourceGenerators in Compile <+= (sourceManaged in Compile, scalaVersion in Compile) map { (baseDir, scalaVersion) =>
   import java.io._
@@ -43,9 +56,9 @@ sourceGenerators in Compile <+= (sourceManaged in Compile, scalaVersion in Compi
     printer.println("object ErrorImpl {")
     printer.println("  @inline def error(message: String): Nothing = {")
     scalaVersion match {
-      case Is28() => printer.println("    Predef.error(message)")
-      case Is29() => printer.println("    sys.error(message)")
-      case Is210() => printer.println("    sys.error(message)")
+      case s if s.startsWith("2.8.") => printer.println("    Predef.error(message)")
+      case s if s.startsWith("2.9.") => printer.println("    sys.error(message)")
+      case s if s.startsWith("2.10.") => printer.println("    sys.error(message)")
     }
     printer.println("  }")
     printer.println("}")

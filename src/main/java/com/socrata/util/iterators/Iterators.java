@@ -40,6 +40,7 @@ public class Iterators {
         return new FlatteningIterator<T>(input);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Iterator<T> append(Iterator<T>... inputs) {
         if(inputs.length == 0)
             return empty();
