@@ -4,6 +4,7 @@ import java.util.regex.{Matcher, Pattern}
 import org.slf4j.{Logger,LoggerFactory}
 import collection.mutable.MutableList
 
+@deprecated("Do not use this class.")
 class UrlRewriteRule {
 
   private var log: Logger = LoggerFactory.getLogger(classOf[UrlRewriteRule])
