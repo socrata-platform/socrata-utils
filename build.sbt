@@ -11,9 +11,9 @@ version := "0.6.2-SNAPSHOT"
 
 previousArtifact <<= scalaBinaryVersion { sv => Some("com.socrata" % ("socrata-utils_" + sv) % "0.6.1") }
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.2"
 
-crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.0")
+crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.2")
 
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
