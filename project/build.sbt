@@ -1,7 +1,8 @@
-resolvers += "DiversIT repo" at "http://repository-diversit.forge.cloudbees.com/release"
+resolvers ++= Seq(
+  "socrata releases" at "http://repository-socrata-oss.forge.cloudbees.com/release",
+  "DiversIT repo" at "http://repository-diversit.forge.cloudbees.com/release"
+)
 
-addSbtPlugin("eu.diversit.sbt.plugin" % "webdav4sbt" % "1.3")
-
-addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.1.5")
+addSbtPlugin("com.socrata" % "socrata-cloudbees-sbt" % "1.0.0")
 
 libraryDependencies += "com.rojoma" %% "simple-arm" % "1.1.10"

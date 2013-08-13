@@ -1,15 +1,12 @@
-import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
-mimaDefaultSettings
+com.socrata.cloudbeessbt.SocrataCloudbeesSbt.socrataSettings()
 
 name := "socrata-utils"
 
-organization := "com.socrata"
-
 version := "0.7.1-SNAPSHOT"
 
-previousArtifact <<= scalaBinaryVersion { sv => Some("com.socrata" % ("socrata-utils_" + sv) % "0.6.1") }
+previousArtifact <<= scalaBinaryVersion { sv => Some("com.socrata" % ("socrata-utils_" + sv) % "0.7.0") }
 
 scalaVersion := "2.10.2"
 
@@ -36,16 +33,13 @@ testOptions in Test += Tests.Setup { loader =>
 }
 
 scalacOptions <++= (scalaVersion) map {
-  case s if s.startsWith("2.8.") => Seq("-deprecation")
-  case s if s.startsWith("2.9.") => Seq("-deprecation")
+  case s if s.startsWith("2.8.") => Nil
+  case s if s.startsWith("2.9.") => Nil
   case s if s.startsWith("2.10.") =>
-    Seq("-deprecation", "-feature",
-      // I would prefer to turn these on per-scope as appropriate
-      // but can't do it while keeping 2.[8,9] compatibility.
+    Seq(// I would prefer to turn these on per-scope as appropriate
+        // but can't do it while keeping 2.[8,9] compatibility.
       "-language:higherKinds", "-language:implicitConversions")
 }
-
-javacOptions ++= Seq("-Xlint:unchecked")
 
 sourceGenerators in Compile <+= (sourceManaged in Compile, scalaVersion in Compile) map { (baseDir, scalaVersion) =>
   import java.io._
