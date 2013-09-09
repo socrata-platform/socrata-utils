@@ -4,7 +4,7 @@ com.socrata.cloudbeessbt.SocrataCloudbeesSbt.socrataSettings()
 
 name := "socrata-utils"
 
-version := "0.7.1-SNAPSHOT"
+version := "0.7.1"
 
 previousArtifact <<= scalaBinaryVersion { sv => Some("com.socrata" % ("socrata-utils_" + sv) % "0.7.0") }
 
@@ -15,7 +15,7 @@ crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.2")
 libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "1.6",
   "com.yammer.metrics" % "metrics-core" % "2.0.3",
-  "com.rojoma" %% "simple-arm" % "1.1.10",
+  "com.rojoma" %% "simple-arm" % "[1.1.10,2.0.0)",
   "org.slf4j" % "slf4j-simple" % "1.7.5" % "test"
 )
 
