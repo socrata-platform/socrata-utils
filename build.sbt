@@ -4,8 +4,6 @@ com.socrata.cloudbeessbt.SocrataCloudbeesSbt.socrataSettings()
 
 name := "socrata-utils"
 
-version := "0.7.2-SNAPSHOT"
-
 previousArtifact <<= scalaBinaryVersion { sv => Some("com.socrata" % ("socrata-utils_" + sv) % "0.7.1") }
 
 scalaVersion := "2.10.2"
