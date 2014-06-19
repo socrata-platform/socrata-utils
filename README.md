@@ -5,3 +5,5 @@ A collection of (mostly) dependency-free utility classes and functions.
 ## Releasing
 
 Run 'sbt-release' to bump the version appropriately and tag the release.
+
+For more information about versioning, check semver.org
