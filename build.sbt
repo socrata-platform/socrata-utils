@@ -11,10 +11,11 @@ scalaVersion := "2.10.2"
 crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.2")
 
 libraryDependencies ++= Seq(
-  "joda-time" % "joda-time" % "1.6",
+  "com.rojoma"        %% "simple-arm"   % "[1.1.10,2.0.0)",
   "com.yammer.metrics" % "metrics-core" % "2.0.3",
-  "com.rojoma" %% "simple-arm" % "[1.1.10,2.0.0)",
-  "org.slf4j" % "slf4j-simple" % "1.7.5" % "test"
+  "joda-time"          % "joda-time"    % "2.6",
+  "org.joda"           % "joda-convert" % "1.2",
+  "org.slf4j"          % "slf4j-simple" % "1.7.5" % "test"
 )
 
 libraryDependencies <++= (scalaVersion) {
