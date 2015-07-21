@@ -1,8 +1,8 @@
 package com.socrata.util.scalacollectionsfromjava
 
-
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.ShouldMatchers
+
 class ScalaCollectionsFromJavaSpec extends WordSpec with ShouldMatchers {
   "A ScalaToJavaConverter" should {
     val b = new java.util.ArrayList[Int](3)

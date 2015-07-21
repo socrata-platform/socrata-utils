@@ -7,6 +7,8 @@ import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
 import org.scalacheck.Prop._
 
+import scala.reflect.ClassTag
+
 // "StringCodec" is also a top-level name in this package, which
 // breaks implicit-resolution.
 import Codecs.{StringCodec => SC, _}
@@ -39,7 +41,7 @@ class CodecTests extends FunSuite with Checkers {
 
   def codecRoundTrips[T: Arbitrary](codec: Codec[T]) = check(forAll { x: T => x == roundtrip(x, codec) })
 
-  def arrayCodecRoundTrips[T: Arbitrary: ClassManifest](codec: Codec[Array[T]]) = check(forAll { x: Array[T] =>
+  def arrayCodecRoundTrips[T: Arbitrary: ClassTag](codec: Codec[Array[T]]) = check(forAll { x: Array[T] =>
     x.toSeq == roundtrip(x, codec).toSeq
   })
 

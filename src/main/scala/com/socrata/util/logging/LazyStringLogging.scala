@@ -2,6 +2,8 @@ package com.socrata.util.logging
 
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.reflect.ClassTag
+
 /** An SLF4J wrapper which uses a lazily-evaluated string for message contents.
   * The string is evaluated only if the requested log level is enabled.
   * 
@@ -75,7 +77,6 @@ class LazyStringLogger(val slf4j: Logger) {
 }
 
 object LazyStringLogger {
-  def apply[T: ClassManifest]: LazyStringLogger = apply(classManifest[T].erasure)
   def apply(cls: Class[_]): LazyStringLogger = new LazyStringLogger(cls)
   def apply(name: String): LazyStringLogger = new LazyStringLogger(name)
   def apply(logger: Logger): LazyStringLogger = new LazyStringLogger(logger)

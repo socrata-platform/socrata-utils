@@ -14,8 +14,8 @@ class SimpleFuture[A](result: A) extends Future[A] with java.util.concurrent.Fut
   def cancel(mayInterruptIfRunning: Boolean) = false
   def apply() = result
   def apply(timespan: Timespan): Option[A] = Some(result)
-  def isCancelled = false
-  def isDone = true
+  override val isCancelled: Boolean = false
+  override val isDone: Boolean = true
 
   // Java version...
   def get(interval: Long, timeunit: java.util.concurrent.TimeUnit) = result

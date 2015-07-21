@@ -1,14 +1,10 @@
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
-com.socrata.cloudbeessbt.SocrataCloudbeesSbt.socrataSettings()
-
 name := "socrata-utils"
 
 previousArtifact <<= scalaBinaryVersion { sv => Some("com.socrata" % ("socrata-utils_" + sv) % "0.7.1") }
 
-scalaVersion := "2.10.2"
-
-crossScalaVersions := Seq("2.8.1", "2.9.2", "2.10.2")
+crossScalaVersions := Seq("2.8.1", "2.9.2")
 
 libraryDependencies ++= Seq(
   "com.rojoma"        %% "simple-arm"   % "[1.1.10,2.0.0)",
@@ -23,13 +19,17 @@ libraryDependencies <++= (scalaVersion) {
     Seq("org.scalacheck" % "scalacheck_2.8.1" % "1.8" % "test",
         "org.scalatest" % "scalatest_2.8.1" % "1.8" % "test")
   case _ =>
-    Seq("org.scalacheck" %% "scalacheck" % "1.10.0" % "test",
-        "org.scalatest" %% "scalatest" % "1.9.1" % "test")
+    Seq("org.scalacheck" %% "scalacheck" % "1.12.4" % "test")
 }
 
 testOptions in Test += Tests.Setup { loader =>
   loader.loadClass("org.slf4j.LoggerFactory").getMethod("getILoggerFactory").invoke(null)
 }
+
+// TODO: enable code coverage build failures
+scoverage.ScoverageSbtPlugin.ScoverageKeys.coverageFailOnMinimum := false
+// TODO: enable scalastyle build failures
+com.socrata.sbtplugins.StylePlugin.StyleKeys.styleFailOnError in Compile := false
 
 scalacOptions <++= (scalaVersion) map {
   case s if s.startsWith("2.8.") => Nil

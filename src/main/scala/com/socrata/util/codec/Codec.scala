@@ -1,6 +1,7 @@
 package com.socrata.util
 package codec
 
+import scala.reflect.ClassTag
 import scala.{collection => sc}
 
 import java.io.{DataInput, DataOutput, IOException}
@@ -207,7 +208,7 @@ object Codecs {
     }
   }
 
-  implicit def ArrayCodec[T : Codec : ClassManifest] = new Codec[Array[T]] {
+  implicit def ArrayCodec[T : Codec : ClassTag]: Codec[Array[T]] = new Codec[Array[T]] {
     def encode(xs: Array[T], o: DataOutput) = {
       writeSize(xs.length, o)
       for(e <- xs) implicitly[Codec[T]].encode(e, o)
@@ -222,7 +223,7 @@ object Codecs {
     }
   }
 
-  implicit def SeqCodec[T, S[X] <: Seq[X]](implicit tCodec: Codec[T], buildFactory: CB[T, S[T]]) = new Codec[S[T]] {
+  implicit def SeqCodec[T, S[X] <: Seq[X]](implicit tCodec: Codec[T], buildFactory: CB[T, S[T]]): Codec[S[T]] = new Codec[S[T]] {
     def encode(s: S[T], o: DataOutput) = {
       writeSize(s.size, o)
       for(e <- s) tCodec.encode(e, o)

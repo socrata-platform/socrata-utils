@@ -1,7 +1,7 @@
 package com.socrata.util.hashing
 
 import org.scalatest.FunSuite
-import org.scalatest.matchers.MustMatchers
+import org.scalatest.MustMatchers
 import org.scalatest.prop.PropertyChecks
 
 import java.nio.{ByteBuffer, ByteOrder}

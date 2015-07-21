@@ -4,8 +4,7 @@ import org.scalatest.prop.Checkers
 import org.scalatest.FunSuite
 
 class UrlRewriteRuleTest  extends FunSuite with Checkers {
-
-  def semanticUrls {
+  def semanticUrls(): Unit = {
     val rules = new UrlRewriteRule
     rules.add("^/id/(.*)/(.*)$", "/resources/$1/rows/$2").add("^/id/([^\\.]*)([^/]*)$", "/resources/$1/rows$2")
     assert("/resources/catalog/rows" == rules.rewrite("/id/catalog"))
@@ -17,5 +16,5 @@ class UrlRewriteRuleTest  extends FunSuite with Checkers {
     assert("/resources/catalog/rows.json?col=value" == rules.rewrite("/id/catalog.json?col=value"))
   }
 
-  test("UrlRewrite semanticUrls") { semanticUrls }
+  test("UrlRewrite semanticUrls") { semanticUrls() }
 }
