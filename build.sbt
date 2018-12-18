@@ -1,6 +1,7 @@
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
 name := "socrata-utils"
+organization := "com.socrata"
 
 previousArtifact <<= scalaBinaryVersion { sv => None }
 
