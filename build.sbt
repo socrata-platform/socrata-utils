@@ -1,7 +1,5 @@
 import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
 
-com.socrata.cloudbeessbt.SocrataCloudbeesSbt.socrataSettings()
-
 name := "socrata-utils"
 
 previousArtifact <<= scalaBinaryVersion { sv => None }
