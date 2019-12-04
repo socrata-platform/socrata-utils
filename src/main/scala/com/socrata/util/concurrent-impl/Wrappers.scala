@@ -2,7 +2,7 @@ package com.socrata.util.`concurrent-impl`
 
 import com.socrata.util.concurrent._
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import java.util.{concurrent => juc}
 import annotation.unchecked.uncheckedVariance
 import com.socrata.util.UnsafeMatch
@@ -68,7 +68,7 @@ trait WrappedJavaExecutorService extends WrappedJavaExecutor with ExecutorServic
 
   def shutdown() = asJava.shutdown()
 
-  def shutdownNow() = asJava.shutdownNow().map(r => () => r.run())
+  def shutdownNow() = asJava.shutdownNow().asScala.map(r => () => r.run())
 }
 
 abstract class WrappedScalaExecutorService extends juc.AbstractExecutorService with WrappedScalaExecutor {
@@ -77,7 +77,7 @@ abstract class WrappedScalaExecutorService extends juc.AbstractExecutorService w
   def isTerminated = asScala.isTerminated
   def awaitTermination(timeout: Long, unit: juc.TimeUnit) = asScala.awaitTermination(Timespan(timeout, unit))
   def shutdown() = asScala.shutdown()
-  def shutdownNow() = asScala.shutdownNow().map(f => new Runnable() { def run() = f() })
+  def shutdownNow() = asScala.shutdownNow().map(f => new Runnable() { def run() = f() }).asJava
 }
 
 class JavaExecutorServiceWrapper(j: juc.ExecutorService) {

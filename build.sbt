@@ -1,16 +1,13 @@
-import com.typesafe.tools.mima.plugin.MimaKeys.previousArtifact
-
 name := "socrata-utils"
 organization := "com.socrata"
 
-previousArtifact <<= scalaBinaryVersion { sv => None }
+mimaPreviousArtifacts := Set()
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.8"
 
-crossScalaVersions := Seq("2.10.4", scalaVersion.value)
+crossScalaVersions := Seq("2.10.4", "2.11.7", scalaVersion.value)
 
 libraryDependencies ++= Seq(
-  "com.rojoma"        %% "simple-arm"    % "[1.1.10,2.0.0)",
   "com.rojoma"        %% "simple-arm-v2" % "[2.1.0,3.0.0)",
   "com.yammer.metrics" % "metrics-core"  % "2.0.3",
   "joda-time"          % "joda-time"     % "2.6",
@@ -19,6 +16,8 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scalacheck" %% "scalacheck" % "1.12.4" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.14.0" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 )
+
+scalacOptions ++= Seq("-deprecation", "-feature")

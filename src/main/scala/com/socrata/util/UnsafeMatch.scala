@@ -1,8 +1,10 @@
 package com.socrata.util
 
-class UnsafeMatch[T: ClassManifest] {
+import scala.reflect.ClassTag
+
+class UnsafeMatch[T: ClassTag] {
   def unapply(x: Any): Option[T] = {
-    if(classManifest[T].erasure.isInstance(x.asInstanceOf[AnyRef])) Some(x.asInstanceOf[T])
+    if(implicitly[ClassTag[T]].runtimeClass.isInstance(x.asInstanceOf[AnyRef])) Some(x.asInstanceOf[T])
     else None
   }
 }

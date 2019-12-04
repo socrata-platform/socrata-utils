@@ -1,7 +1,9 @@
 package com.socrata.util.codec
 
+import scala.reflect.ClassTag
+
 import org.scalatest.FunSuite
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 
 import org.scalacheck.Arbitrary
 import org.scalacheck.Gen
@@ -39,7 +41,7 @@ class CodecTests extends FunSuite with Checkers {
 
   def codecRoundTrips[T: Arbitrary](codec: Codec[T]) = check(forAll { x: T => x == roundtrip(x, codec) })
 
-  def arrayCodecRoundTrips[T: Arbitrary: ClassManifest](codec: Codec[Array[T]]) = check(forAll { x: Array[T] =>
+  def arrayCodecRoundTrips[T: Arbitrary: ClassTag](codec: Codec[Array[T]]) = check(forAll { x: Array[T] =>
     x.toSeq == roundtrip(x, codec).toSeq
   })
 

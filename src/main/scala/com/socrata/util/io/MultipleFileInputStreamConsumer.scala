@@ -2,7 +2,7 @@ package com.socrata.util.io
 
 import java.io._
 import java.util.zip.CRC32
-import com.rojoma.simplearm.util._
+import com.rojoma.simplearm.v2._
 
 object MultipleFileInputStreamConsumer extends ((File, InputStream) => Unit) {
   @throws(classOf[IOException])

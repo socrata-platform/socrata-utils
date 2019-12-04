@@ -1,5 +1,7 @@
 package com.socrata.util.`logging-impl`
 
+import scala.language.implicitConversions
+
 sealed abstract class LogException
 
 object LogException {
