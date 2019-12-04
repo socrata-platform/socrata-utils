@@ -1,7 +1,7 @@
 package com.socrata.util.io
 
 import org.scalatest.FunSuite
-import org.scalatest.matchers.MustMatchers
+import org.scalatest.MustMatchers
 import java.io.{ByteArrayOutputStream, PrintStream}
 
 class HexDumpTest extends FunSuite with MustMatchers {

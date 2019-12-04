@@ -6,10 +6,10 @@ import java.util.Random
 import java.util.concurrent.CyclicBarrier
 
 import com.rojoma.simplearm.v2._
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalatest.{FunSuite, MustMatchers}
 
-class SplitStreamTest extends FunSuite with MustMatchers with PropertyChecks {
+class SplitStreamTest extends FunSuite with MustMatchers with ScalaCheckPropertyChecks {
   test("speedy can read the data") {
     forAll { (bs0: List[List[Byte]]) =>
       val bais = new ByteArrayInputStream(bs0.map(_.toArray).toArray.flatten)

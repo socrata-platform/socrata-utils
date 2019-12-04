@@ -1,5 +1,6 @@
 package com.socrata.util.concurrent
 
+import scala.language.implicitConversions
 import com.socrata.util.`concurrent-impl`._
 
 package object implicits {

@@ -1,12 +1,12 @@
 package com.socrata.util.hashing
 
 import org.scalatest.FunSuite
-import org.scalatest.matchers.MustMatchers
-import org.scalatest.prop.PropertyChecks
+import org.scalatest.MustMatchers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 import java.nio.{ByteBuffer, ByteOrder}
 
-class MurmurHash3Test extends FunSuite with PropertyChecks with MustMatchers {
+class MurmurHash3Test extends FunSuite with ScalaCheckPropertyChecks with MustMatchers {
   test("MurmurHash3 passes the standard verification test") {
     // adapted from SMHasher's test of MurmurHash_x36_32
     val expected = 0xB0F57EE3

@@ -2,8 +2,9 @@ package com.socrata.util.scalacollectionsfromjava
 
 
 import org.scalatest.WordSpec
-import org.scalatest.matchers.ShouldMatchers
-class ScalaCollectionsFromJavaSpec extends WordSpec with ShouldMatchers {
+import org.scalatest.Matchers
+
+class ScalaCollectionsFromJavaSpec extends WordSpec with Matchers {
   "A ScalaToJavaConverter" should {
     val b = new java.util.ArrayList[Int](3)
     b.add(1)
@@ -14,7 +15,7 @@ class ScalaCollectionsFromJavaSpec extends WordSpec with ShouldMatchers {
       ScalaCollectionsFromJava.scalaSeqAsJavaList(a) should be (b)
     }
     "convert a scala array list to a java list" in {
-    ScalaCollectionsFromJava.scalaSeqAsJavaList(scala.collection.mutable.ArrayBuffer(1,2,3)) should be (b)
+      ScalaCollectionsFromJava.scalaSeqAsJavaList(scala.collection.mutable.ArrayBuffer(1,2,3)) should be (b)
     }
   }
 }

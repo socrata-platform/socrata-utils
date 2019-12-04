@@ -1,5 +1,6 @@
 package com.socrata.util
 
+import scala.language.implicitConversions
 import `implicits-impl`._
 import java.io.{FileFilter, File, FilenameFilter}
 

@@ -2,13 +2,13 @@ package com.socrata.util.io
 
 import org.scalatest.FunSuite
 import org.scalatest.MustMatchers
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 import java.io.{InputStream, ByteArrayInputStream, ByteArrayOutputStream}
 
 import scala.annotation.tailrec
 
-class CircularByteBufferTest extends FunSuite with MustMatchers with PropertyChecks {
+class CircularByteBufferTest extends FunSuite with MustMatchers with ScalaCheckPropertyChecks {
   test("Putting bytes and then reading them without overflowing works") {
     forAll { (start: Int, extra: Int, bss0: List[List[Byte]]) =>
       val bss = bss0.map(_.toArray)
