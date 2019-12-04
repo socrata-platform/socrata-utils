@@ -1,7 +1,9 @@
 name := "socrata-utils"
 organization := "com.socrata"
 
-mimaPreviousArtifacts := Set()
+mimaPreviousArtifacts := Set("com.socrata" %% "socrata-utils" % "0.11.0")
+
+resolvers += "socrata maven" at "https://repo.socrata.com/artifactory/libs-release/"
 
 scalaVersion := "2.12.8"
 
