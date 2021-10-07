@@ -11,7 +11,7 @@ private [simple] class LockStructure {
   var heldSince: DateTime = null
   val waiters = new scm.HashSet[Thread]
 
-  def acquiredBy(newOwner: Thread) {
+  def acquiredBy(newOwner: Thread): Unit = {
     // PRECONDITION: either I own the lock's monitor, or I hold the only reference to it.
     heldBy = newOwner
     holdCount += 1
@@ -80,7 +80,7 @@ class SimpleLocker extends Locker {
     Locked(new SimpleUnlocker(lockId, lock));
   }
 
-  private def unlock(lockId: String, lock: LockStructure) {
+  private def unlock(lockId: String, lock: LockStructure): Unit = {
     // I won't be sleeping, but I might be modifying the "locks" map, so I
     // need to take this object's monitor first
     synchronized {
@@ -99,7 +99,7 @@ class SimpleLocker extends Locker {
   }
 
   private class SimpleUnlocker(lockId: String, var lock: LockStructure) extends Unlocker {
-    def unlock() {
+    def unlock(): Unit = {
       SimpleLocker.this.unlock(lockId, lock)
       lock = null // make improper (i.e., multiple) use of an Unlocker fail fast
     }

@@ -6,7 +6,7 @@ class RateLimitedVisibleState(underlying: VisibleState, rateMS: Long) extends Vi
 
   def get() = underlying.get()
 
-  def set(value: => String) {
+  def set(value: => String): Unit = {
     val now = System.currentTimeMillis()
     if(lastSetAt + rateMS < now) {
       underlying.set(value)
@@ -14,7 +14,7 @@ class RateLimitedVisibleState(underlying: VisibleState, rateMS: Long) extends Vi
     }
   }
 
-  def clear() {
+  def clear(): Unit = {
     underlying.clear()
     lastSetAt = 0L
   }

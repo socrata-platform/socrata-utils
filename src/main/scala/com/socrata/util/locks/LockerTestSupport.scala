@@ -11,7 +11,7 @@ private[locks] object LockerTestSupport {
   def thread[U](name: String)(f: => U) = {
     val t = new Thread() {
       setName(name)
-      override def run() {
+      override def run(): Unit = {
         f
       }
     }
@@ -19,26 +19,26 @@ private[locks] object LockerTestSupport {
     t
   }
 
-  def rwTooManyWaitersTest(locker: RWLocker) {
+  def rwTooManyWaitersTest(locker: RWLocker): Unit = {
     tooManyWaitersTest(locker.readLocker, locker.writeLocker)
     tooManyWaitersTest(locker.writeLocker, locker.writeLocker)
     tooManyWaitersTest(locker.writeLocker, locker.readLocker)
   }
 
-  def rwWaitTooLongTest(locker: RWLocker) {
+  def rwWaitTooLongTest(locker: RWLocker): Unit = {
     waitTooLongTest(locker.readLocker, locker.writeLocker)
     waitTooLongTest(locker.writeLocker, locker.writeLocker)
     waitTooLongTest(locker.writeLocker, locker.readLocker)
   }
 
-  def rwCheckHeldTest(locker: RWLocker) {
+  def rwCheckHeldTest(locker: RWLocker): Unit = {
     assert(checkLockTrueIfHeldTest(locker.readLocker, locker.writeLocker) == ((true, true, true)))
     assert(checkLockTrueIfHeldTest(locker.readLocker, locker.readLocker) == ((true, false, true)))
     assert(checkLockTrueIfHeldTest(locker.writeLocker, locker.writeLocker) == ((true, true, true)))
     assert(checkLockTrueIfHeldTest(locker.writeLocker, locker.readLocker) == ((true, true, true)))
   }
 
-  def rwCheckHeldSinceTest(locker: RWLocker) {
+  def rwCheckHeldSinceTest(locker: RWLocker): Unit = {
     val lockName = "checkLockTime"
     val startTime = new DateTime
 
@@ -53,7 +53,7 @@ private[locks] object LockerTestSupport {
     assert(writeTime.compareTo(startTime) > 0)
   }
 
-  def tooManyWaitersTest(aLocker: Locker, bLocker: Locker) {
+  def tooManyWaitersTest(aLocker: Locker, bLocker: Locker): Unit = {
     val locked = new Semaphore(0)
     val done = new CountDownLatch(1)
 
@@ -107,7 +107,7 @@ private[locks] object LockerTestSupport {
     (resultA, resultB, resultC)
   }
 
-  def waitTooLongTest(aLocker: Locker, bLocker: Locker) {
+  def waitTooLongTest(aLocker: Locker, bLocker: Locker): Unit = {
     val locked = new Semaphore(0)
     val done = new CountDownLatch(1)
 
@@ -139,7 +139,7 @@ private[locks] object LockerTestSupport {
     b.join()
   }
 
-  def writerPrecedenceTest(locker: RWLocker) {
+  def writerPrecedenceTest(locker: RWLocker): Unit = {
     val lockName = "writerprecedence"
 
     var record = new scm.Queue[String]

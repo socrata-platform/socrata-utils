@@ -21,7 +21,7 @@ class StandaloneAdvertisements(executor: Executor) extends Advertiser with Watch
     result
   }
 
-  private def unregister(registration: Registration) {
+  private def unregister(registration: Registration): Unit = {
     val callback = synchronized {
       advertisements.get(registration.name) match {
         case Some(set) =>
@@ -41,7 +41,7 @@ class StandaloneAdvertisements(executor: Executor) extends Advertiser with Watch
     if(callback != null) executor.execute { callback(this) }
   }
 
-  def start(changeCallback: WatchAdvertisements => Unit) {
+  def start(changeCallback: WatchAdvertisements => Unit): Unit = {
     val doCallback = synchronized {
       if(stopped) throw new IllegalStateException("Cannot be restarted")
       if(onChange != null) throw new IllegalStateException("Already started")
@@ -61,6 +61,6 @@ class StandaloneAdvertisements(executor: Executor) extends Advertiser with Watch
 
   // Note: NOT A CASE CLASS.  We need identity-based hashcode and equals!
   private class Registration(val name: String) extends AdvertisementRegistration {
-    def stopAdvertising() { unregister(this) }
+    def stopAdvertising(): Unit = unregister(this)
   }
 }

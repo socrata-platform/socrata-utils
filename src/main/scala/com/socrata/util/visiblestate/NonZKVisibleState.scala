@@ -5,11 +5,11 @@ import NonZKVisibleState._
 class NonZKVisibleState(name: String) extends VisibleState {
   def get() = Option(table.get(name))
 
-  def set(value: =>String) {
+  def set(value: =>String): Unit = {
     table.put(name, value)
   }
 
-  def clear() {
+  def clear(): Unit = {
     table.remove(name)
   }
 }

@@ -3,13 +3,13 @@ package com.socrata.util.io
 import java.io.{ByteArrayInputStream, PrintStream, InputStream}
 
 object HexDump {
-  def fromStream(in: InputStream, out: PrintStream = Console.out) {
+  def fromStream(in: InputStream, out: PrintStream = Console.out): Unit = {
     var offset = 0
     val size = 16
     val buf = new Array[Byte](size)
     var end = 0
 
-    def dump() {
+    def dump(): Unit = {
       if(end != 0) {
         out.printf("%08x  ", Integer.valueOf(offset))
         var i = 0
@@ -49,7 +49,7 @@ object HexDump {
     }
   }
 
-  def fromByteArray(bs: Array[Byte], out: PrintStream = Console.out) {
+  def fromByteArray(bs: Array[Byte], out: PrintStream = Console.out): Unit = {
     fromStream(new ByteArrayInputStream(bs), out)
   }
 }

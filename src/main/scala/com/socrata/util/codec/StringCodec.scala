@@ -4,7 +4,7 @@ package codec
 import java.io.{Reader, Writer}
 
 trait StringCodec[T] {
-  def encode(x: T, out: Writer)
+  def encode(x: T, out: Writer): Unit
   def decode(in: Reader): T
 }
 
@@ -31,7 +31,7 @@ object StringCodec {
 
 object StringCodecs {
   implicit object StringStringCodec extends StringCodec[String] {
-    def encode(x: String, out: Writer) {
+    def encode(x: String, out: Writer): Unit = {
       out.write(x)
     }
 

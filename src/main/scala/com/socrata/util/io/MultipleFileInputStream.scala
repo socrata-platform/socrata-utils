@@ -23,7 +23,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
   // kick things off
   moveToNextFile()
 
-  @inline private def trace(s: => String) {
+  @inline private def trace(s: => String): Unit = {
     // println(s)
   }
 
@@ -35,17 +35,17 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     def go(buf: Array[Byte], start: Int, len: Int) = {
       if (!currentBlock.hasRemaining) {
         gotoNextState()
-        trace(getClass + " : moving to state " + currentState.getClass)
+        trace(s"$getClass : moving to state ${currentState.getClass}")
         currentState.go(buf, start, len)
       } else {
         val toCopy = math.min(len, currentBlock.remaining)
-        trace(getClass + " : writing " + toCopy + " byte(s)")
+        trace(s"$getClass : writing $toCopy byte(s)")
         currentBlock.get(buf, start, toCopy)
         toCopy
       }
     }
 
-    def gotoNextState()
+    def gotoNextState(): Unit
   }
 
   class HashState(hash: Int) extends ByteBufferState {
@@ -53,7 +53,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     currentBlock.putInt(hash)
     currentBlock.flip()
 
-    def gotoNextState() {
+    def gotoNextState(): Unit = {
       moveToNextFile()
     }
   }
@@ -72,7 +72,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     currentBlock.putInt(currentCheckSum.getValue.toInt)
     currentBlock.flip()
 
-    def gotoNextState() {
+    def gotoNextState(): Unit = {
       currentState = new FileContentsState(filename)
     }
   }
@@ -85,14 +85,14 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     // if currentFile.read throws for some reason, doing the loadBlock here
     // will leak the file handle.
 
-    def gotoNextState() {
+    def gotoNextState(): Unit = {
       loadBlock()
       if (!currentBlock.hasRemaining) {
         currentState = new EOFState(currentCheckSum.getValue.toInt)
       }
     }
 
-    def loadBlock() {
+    def loadBlock(): Unit = {
       currentBlock.clear().limit(0)
       // What we want is {length} {data}, so we'll read as much as we can
       // into the right place in the array, then go back and put the length
@@ -117,7 +117,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     currentBlock.putInt(-1)
     currentBlock.flip()
 
-    def gotoNextState() {
+    def gotoNextState(): Unit = {
       currentState = new HashState(digest)
     }
   }
@@ -127,7 +127,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     currentBlock.putInt(-1)
     currentBlock.flip()
 
-    def gotoNextState() {
+    def gotoNextState(): Unit = {
       currentState = DoneState
     }
   }
@@ -136,7 +136,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     def go(buf: Array[Byte], start: Int, len: Int) = -1
   }
 
-  override def close() {
+  override def close(): Unit = {
     if (currentFile != null) currentFile.close()
     currentState = DoneState
   }
@@ -147,7 +147,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     else buf(0) & 0xff
   }
 
-  private def moveToNextFile() {
+  private def moveToNextFile(): Unit = {
     while (fileIterator.hasNext && !new File(base, fileIterator.head).isFile()) fileIterator.next()
     if (fileIterator.hasNext) currentState = new FilenameState(fileIterator.next())
     else currentState = new NoMoreFilesState
@@ -164,11 +164,11 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
     total
   }
 
-  def writeTo(file: String) {
+  def writeTo(file: String): Unit = {
     val s = new java.io.FileOutputStream(file)
     try {
       val buf = new Array[Byte](100)
-      def loop() {
+      def loop(): Unit = {
         read(buf) match {
           case -1 => // done
           case n =>

@@ -14,7 +14,7 @@ class MultipleFileInputStreamConsumer {
   private val buf = new Array[Byte](10240)
 
   @throws(classOf[IOException])
-  def consume(targetDir: File, input: InputStream) {
+  def consume(targetDir: File, input: InputStream): Unit = {
     val in = new DataInputStream(input)
     while (true) {
       readFilename(in) match {
@@ -26,7 +26,7 @@ class MultipleFileInputStreamConsumer {
     }
   }
 
-  def readFile(filename: File, in: DataInput) {
+  def readFile(filename: File, in: DataInput): Unit = {
     Option(filename.getParentFile).foreach(_.mkdirs())
     using(new FileOutputStream(filename)) { out =>
       checksum.reset()
@@ -39,7 +39,7 @@ class MultipleFileInputStreamConsumer {
     }
   }
 
-  private def copy(in: DataInput, out: OutputStream, count: Int) {
+  private def copy(in: DataInput, out: OutputStream, count: Int): Unit = {
     var remaining = count
     while (remaining != 0) {
       val toRead = math.min(remaining, buf.length)

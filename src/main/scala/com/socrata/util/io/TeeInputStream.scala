@@ -35,13 +35,13 @@ class TeeInputStream(source: InputStream, target: OutputStream) extends FilterIn
   }
 
   override def markSupported = false
-  override def mark(n: Int) {}
-  override def reset() {
+  override def mark(n: Int): Unit = {}
+  override def reset(): Unit = {
     throw new IOException("mark/reset not supported")
   }
 
   @throws(classOf[IOException])
-  def finish() {
+  def finish(): Unit = {
     skip(Long.MaxValue)
     target.flush()
   }

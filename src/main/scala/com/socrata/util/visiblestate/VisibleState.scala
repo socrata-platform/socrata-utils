@@ -5,6 +5,6 @@ trait VisibleState {
 
   def getOrElse(value: => String) = get().getOrElse(value)
 
-  def set(value: => String)
-  def clear()
+  def set(value: => String): Unit
+  def clear(): Unit
 }

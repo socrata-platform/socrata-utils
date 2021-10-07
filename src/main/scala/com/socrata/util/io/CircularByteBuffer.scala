@@ -186,12 +186,12 @@ final class CircularByteBuffer(val capacity: Int) {
     }
   }
 
-  def clear() {
+  def clear(): Unit = {
     readPtr = 0
     writePtr = 0
   }
 
-  def clearAt(n: Int) {
+  def clearAt(n: Int): Unit = {
     val t = if(n == Int.MinValue) 0 else n.abs % size
     readPtr = t
     writePtr = t

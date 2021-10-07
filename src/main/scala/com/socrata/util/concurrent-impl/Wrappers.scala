@@ -2,17 +2,18 @@ package com.socrata.util.`concurrent-impl`
 
 import com.socrata.util.concurrent._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import java.util.{concurrent => juc}
 import annotation.unchecked.uncheckedVariance
 import com.socrata.util.UnsafeMatch
+import scala.collection.compat._
 
 trait WrappedJavaExecutor extends Executor {
   def asJava: juc.Executor
   
-  def execute[U](f: =>U) {
+  def execute[U](f: =>U): Unit = {
     asJava.execute(new Runnable {
-      override def run() {
+      override def run(): Unit = {
         f
       }
     })
@@ -22,7 +23,7 @@ trait WrappedJavaExecutor extends Executor {
 trait WrappedScalaExecutor extends juc.Executor {
   def asScala: Executor
 
-  def execute(f: Runnable) {
+  def execute(f: Runnable): Unit = {
     asScala.execute {
       f.run()
     }
@@ -68,7 +69,7 @@ trait WrappedJavaExecutorService extends WrappedJavaExecutor with ExecutorServic
 
   def shutdown() = asJava.shutdown()
 
-  def shutdownNow() = asJava.shutdownNow().asScala.map(r => () => r.run())
+  def shutdownNow() = asJava.shutdownNow().asScala.map(r => () => r.run()).to(Seq)
 }
 
 abstract class WrappedScalaExecutorService extends juc.AbstractExecutorService with WrappedScalaExecutor {

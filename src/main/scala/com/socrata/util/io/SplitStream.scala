@@ -193,7 +193,7 @@ object SplitStream {
         }
       }
 
-      private def addToBuffer(bs: Array[Byte], off: Int, len: Int) {
+      private def addToBuffer(bs: Array[Byte], off: Int, len: Int): Unit = {
         if(len > bufSize) {
           // The requested chunk can't possibly fit in the buffer,
           // so just never put it there.  Write it straight to the
@@ -213,14 +213,14 @@ object SplitStream {
         }
       }
 
-      private def spillToDisk() {
+      private def spillToDisk(): Unit = {
         ensurePending()
         totalSpilled += buffer.available
         buffer.writeTo(pendingFileStream)
         other.isLaggard = true
       }
 
-      private def ensurePending() {
+      private def ensurePending(): Unit = {
         if(pendingFile eq null) {
           assert(pendingFileStream eq null)
           pendingFile = File.createTempFile("tmp", ".dat", tmpDir.orNull)
@@ -233,7 +233,7 @@ object SplitStream {
         }
       }
 
-      override def close() {
+      override def close(): Unit = {
         localLock.synchronized {
           if(!closed) {
             closed = true

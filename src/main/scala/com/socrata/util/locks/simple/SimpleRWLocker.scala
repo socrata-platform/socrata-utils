@@ -200,7 +200,7 @@ class SimpleRWLocker extends RWLocker {
     error("Can't get here")
   }
 
-  private def unlock(lockId: String) {
+  private def unlock(lockId: String): Unit = {
     // I won't be sleeping, but I might be modifying the "locks" map, so I
     // need to take this object's monitor first
     val self = Thread.currentThread
@@ -220,7 +220,7 @@ class SimpleRWLocker extends RWLocker {
   }
 
   private class SimpleUnlocker(var lockId: String) extends Unlocker {
-    def unlock() {
+    def unlock(): Unit = {
       SimpleRWLocker.this.unlock(lockId)
       lockId = null // make improper use of this unlocker fail fast
     }

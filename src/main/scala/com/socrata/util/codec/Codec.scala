@@ -7,10 +7,11 @@ import scala.reflect.ClassTag
 
 import java.io.{DataInput, DataOutput, IOException}
 import scala.collection.mutable.ArrayBuilder
+import scala.collection.compat._
 
 trait Codec[T] extends java.io.Serializable {
   @throws(classOf[IOException])
-  def encode(x: T, out: DataOutput)
+  def encode(x: T, out: DataOutput): Unit
 
   @throws(classOf[IOException])
   def decode(in: DataInput): T
@@ -41,7 +42,7 @@ object Codec {
       fromDataInput(dis)
     }
   }
-  
+
   def fromDataInput[T](dataInput: DataInput)(implicit codec: Codec[T]): T =
     codec.decode(dataInput)
 
@@ -50,8 +51,6 @@ object Codec {
 }
 
 object CodecsUtils { // want people to do "import Codecs._" without polluting their namespace with non-codecs
-  type CB[A, B] = sc.generic.CanBuild[A, B]
-
   abstract class SingletonCodec[T] extends Codec[T] {
     @throws(classOf[java.io.ObjectStreamException])
     protected def readResolve(): AnyRef =
@@ -63,7 +62,7 @@ object CodecsUtils { // want people to do "import Codecs._" without polluting th
   def writeSize(size: Int, o: DataOutput) = Codecs.VariableWidthIntCodec.encode(size, o)
   def readSize(i: DataInput) = Codecs.VariableWidthIntCodec.decode(i)
 
-  def times[U](n: Int)(f: Int => U) {
+  def times[U](n: Int)(f: Int => U): Unit = {
     var i = 0
     while(i != n) {
       f(i)
@@ -74,7 +73,7 @@ object CodecsUtils { // want people to do "import Codecs._" without polluting th
 
 object Codecs {
   import CodecsUtils._
-  
+
   implicit object BooleanCodec extends SingletonCodec[Boolean] {
     def encode(b: Boolean, o: DataOutput) = o.writeBoolean(b)
     def decode(i: DataInput) = i.readBoolean()
@@ -96,7 +95,7 @@ object Codecs {
   }
 
   implicit object VariableWidthIntCodec extends SingletonCodec[Int] { // from protocol buffers
-    def encode(i: Int, o: DataOutput) {
+    def encode(i: Int, o: DataOutput): Unit = {
       var value = zigzag(i)
 
       while ((value & ~0x7FL) != 0) {
@@ -130,7 +129,7 @@ object Codecs {
   }
 
   implicit object VariableWidthLongCodec extends SingletonCodec[Long] { // from protocol buffers
-    def encode(l: Long, o: DataOutput) {
+    def encode(l: Long, o: DataOutput): Unit = {
       var value = zigzag(l)
 
       while ((value & ~0x7FL) != 0) {
@@ -217,29 +216,29 @@ object Codecs {
 
     def decode(i: DataInput): Array[T] = {
       val count = readSize(i)
-      val xs = ArrayBuilder.make[T]()
+      val xs = ArrayBuilder.make[T]
       xs.sizeHint(count)
       times(count) { _ => xs += implicitly[Codec[T]].decode(i) }
-      xs.result
+      xs.result()
     }
   }
 
-  implicit def SeqCodec[T, S[X] <: Seq[X]](implicit tCodec: Codec[T], buildFactory: CB[T, S[T]]) = new Codec[S[T]] {
+  implicit def SeqCodec[T, S[X] <: Seq[X]](implicit tCodec: Codec[T], factory: Factory[T, S[T]]) = new Codec[S[T]] {
     def encode(s: S[T], o: DataOutput) = {
       writeSize(s.size, o)
       for(e <- s) tCodec.encode(e, o)
     }
 
     def decode(i: DataInput): S[T] = {
-      val b = buildFactory()
+      val b = factory.newBuilder
       val count = readSize(i)
       b.sizeHint(count)
       times(count) { _ => b += tCodec.decode(i)}
       b.result()
     }
   }
-  
-  implicit def MapCodec[K, V, M[A, B] <: sc.Map[A, B]](implicit kCodec: Codec[K], vCodec: Codec[V], buildFactory: CB[(K,V), M[K, V]]) = new Codec[M[K, V]] {
+
+  implicit def MapCodec[K, V, M[A, B] <: sc.Map[A, B]](implicit kCodec: Codec[K], vCodec: Codec[V], factory: Factory[(K,V), M[K, V]]) = new Codec[M[K, V]] {
     def encode(x: M[K, V], o: DataOutput) = {
       writeSize(x.size, o)
       for((k, v) <- x) {
@@ -247,9 +246,9 @@ object Codecs {
         vCodec.encode(v, o)
       }
     }
-    
+
     def decode(i: DataInput): M[K, V] = {
-      val b = buildFactory()
+      val b = factory.newBuilder
       val count = readSize(i)
       times(count) { _ =>
         val k = kCodec.decode(i)
@@ -259,24 +258,24 @@ object Codecs {
       b.result()
     }
   }
-  
+
   implicit def OptionCodec[T : Codec] = new Codec[Option[T]] {
     def encode(x: Option[T], o: DataOutput) = x match {
       case None => o.writeBoolean(false)
       case Some(v) => o.writeBoolean(true); implicitly[Codec[T]].encode(v, o)
     }
-    
+
     def decode(i: DataInput) =
       if(i.readBoolean()) Some(implicitly[Codec[T]].decode(i))
       else None
   }
-  
+
   implicit def Tuple2Codec[A: Codec, B: Codec] = new Codec[(A, B)] {
-    def encode(x: (A,B), o: DataOutput) {
+    def encode(x: (A,B), o: DataOutput): Unit = {
       implicitly[Codec[A]].encode(x._1, o)
       implicitly[Codec[B]].encode(x._2, o)
     }
-    
+
     def decode(i: DataInput) = {
       val a = implicitly[Codec[A]].decode(i)
       val b = implicitly[Codec[B]].decode(i)
