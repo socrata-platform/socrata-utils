@@ -2,6 +2,7 @@ package com.socrata.util.io
 
 import java.io._
 import java.util.zip.CRC32
+import java.nio.charset.StandardCharsets
 import com.rojoma.simplearm.v2._
 
 object MultipleFileInputStreamConsumer extends ((File, InputStream) => Unit) {
@@ -60,7 +61,7 @@ class MultipleFileInputStreamConsumer {
         checksum.reset()
         checksum.update(buf, 0, n)
         if (checksum.getValue.toInt != input.readInt()) throw new IOException("Bad hash on filename")
-        Some(new String(buf, 0, n, "UTF-8"))
+        Some(new String(buf, 0, n, StandardCharsets.UTF_8))
     }
   }
 

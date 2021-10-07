@@ -2,6 +2,7 @@ package com.socrata.util.io
 
 import java.nio.ByteBuffer
 import java.io.{FileInputStream, File, InputStream}
+import java.nio.charset.StandardCharsets
 import java.util.zip.CRC32
 
 // Format:
@@ -59,7 +60,7 @@ class MultipleFileInputStream(base: File, files: Iterator[String]) extends Input
   }
 
   class FilenameState(filename: String) extends ByteBufferState {
-    val filenameBytes = filename.getBytes("UTF-8")
+    val filenameBytes = filename.getBytes(StandardCharsets.UTF_8)
     val totalSpaceNeeded = filenameBytes.length + 4 + 4
     if (totalSpaceNeeded > currentBlock.capacity) { // this shouldn't happen for any reasonable filenames, but just in case
       currentBlock = ByteBuffer.allocate(totalSpaceNeeded)

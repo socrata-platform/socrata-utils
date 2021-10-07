@@ -6,6 +6,7 @@ import scala.{collection => sc}
 import scala.reflect.ClassTag
 
 import java.io.{DataInput, DataOutput, IOException}
+import java.nio.charset.StandardCharsets
 import scala.collection.mutable.ArrayBuilder
 import scala.collection.compat._
 
@@ -57,7 +58,7 @@ object CodecsUtils { // want people to do "import Codecs._" without polluting th
       getClass.getField("MODULE$").get(null)
   }
 
-  val utf8 = java.nio.charset.Charset.forName("UTF-8")
+  val utf8 = StandardCharsets.UTF_8
 
   def writeSize(size: Int, o: DataOutput) = Codecs.VariableWidthIntCodec.encode(size, o)
   def readSize(i: DataInput) = Codecs.VariableWidthIntCodec.decode(i)
