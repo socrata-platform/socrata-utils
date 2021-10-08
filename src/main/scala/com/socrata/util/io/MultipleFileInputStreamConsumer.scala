@@ -2,6 +2,7 @@ package com.socrata.util.io
 
 import java.io._
 import java.util.zip.CRC32
+import java.nio.charset.StandardCharsets
 import com.rojoma.simplearm.v2._
 
 object MultipleFileInputStreamConsumer extends ((File, InputStream) => Unit) {
@@ -14,7 +15,7 @@ class MultipleFileInputStreamConsumer {
   private val buf = new Array[Byte](10240)
 
   @throws(classOf[IOException])
-  def consume(targetDir: File, input: InputStream) {
+  def consume(targetDir: File, input: InputStream): Unit = {
     val in = new DataInputStream(input)
     while (true) {
       readFilename(in) match {
@@ -26,7 +27,7 @@ class MultipleFileInputStreamConsumer {
     }
   }
 
-  def readFile(filename: File, in: DataInput) {
+  def readFile(filename: File, in: DataInput): Unit = {
     Option(filename.getParentFile).foreach(_.mkdirs())
     using(new FileOutputStream(filename)) { out =>
       checksum.reset()
@@ -39,7 +40,7 @@ class MultipleFileInputStreamConsumer {
     }
   }
 
-  private def copy(in: DataInput, out: OutputStream, count: Int) {
+  private def copy(in: DataInput, out: OutputStream, count: Int): Unit = {
     var remaining = count
     while (remaining != 0) {
       val toRead = math.min(remaining, buf.length)
@@ -60,7 +61,7 @@ class MultipleFileInputStreamConsumer {
         checksum.reset()
         checksum.update(buf, 0, n)
         if (checksum.getValue.toInt != input.readInt()) throw new IOException("Bad hash on filename")
-        Some(new String(buf, 0, n, "UTF-8"))
+        Some(new String(buf, 0, n, StandardCharsets.UTF_8))
     }
   }
 

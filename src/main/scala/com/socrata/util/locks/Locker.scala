@@ -21,7 +21,7 @@ trait Locker extends TimeoutOnlyLocker {
     case _ => None
   }
 
-  def validateLockId(id: String) {
+  def validateLockId(id: String): Unit = {
     if(id.isEmpty || id.contains('/'))
       throw new IllegalArgumentException("A lock ID must be non-empty and must not contain a slash")
   }

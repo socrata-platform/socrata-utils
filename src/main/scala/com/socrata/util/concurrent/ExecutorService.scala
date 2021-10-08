@@ -5,6 +5,6 @@ trait ExecutorService extends Executor {
   def isShutdown: Boolean
   def isTerminated: Boolean
   def awaitTermination(span: Timespan): Boolean
-  def shutdown()
+  def shutdown(): Unit
   def shutdownNow(): Seq[Function0[Unit]]
 }

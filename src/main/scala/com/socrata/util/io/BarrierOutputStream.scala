@@ -5,11 +5,11 @@ import java.io.{FilterOutputStream, OutputStream}
 /** An OutputStream filter that prevents `close()` and/or `flush()` calls from reaching
   * the underlying stream. */
 class BarrierOutputStream(underlying: OutputStream, preventFlush: Boolean = true, preventClose: Boolean = true) extends FilterOutputStream(underlying) {
-  override def close() {
+  override def close(): Unit = {
     if(!preventFlush) out.close()
   }
   
-  override def flush() {
+  override def flush(): Unit = {
     if(!preventClose) out.flush()
   }
 

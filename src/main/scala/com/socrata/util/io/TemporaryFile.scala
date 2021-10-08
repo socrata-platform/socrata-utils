@@ -13,13 +13,13 @@ object TemporaryFile {
     }
   }
 
-  def streamURL(file: File, source: URL) {
+  def streamURL(file: File, source: URL): Unit = {
     val inStream = source.openStream()
     try {
       val outStream = new FileOutputStream(file)
       try {
         val buf = new Array[Byte](10240)
-        def loop() {
+        def loop(): Unit = {
           inStream.read(buf) match {
             case -1 =>
               // done

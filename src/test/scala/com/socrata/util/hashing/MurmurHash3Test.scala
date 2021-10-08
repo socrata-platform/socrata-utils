@@ -5,6 +5,7 @@ import org.scalatest.MustMatchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 import java.nio.{ByteBuffer, ByteOrder}
+import java.nio.charset.StandardCharsets
 
 class MurmurHash3Test extends FunSuite with ScalaCheckPropertyChecks with MustMatchers {
   test("MurmurHash3 passes the standard verification test") {
@@ -51,7 +52,7 @@ class MurmurHash3Test extends FunSuite with ScalaCheckPropertyChecks with MustMa
 
     forAll { (seed: Int, text: String) =>
       val hash = new MurmurHash3(seed)
-      hash(text) must equal (hash(text.getBytes("UTF-16BE")))
+      hash(text) must equal (hash(text.getBytes(StandardCharsets.UTF_16BE)))
     }
   }
 }
